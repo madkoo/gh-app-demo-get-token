@@ -28,7 +28,7 @@ jobs:
         github-token: ${{ steps.get_github_app_token.outputs.token }}
         script: |
             try {
-              const response = await octokit.rest.repos.getContent({
+              const response = await github.rest.repos.getContent({
                 owner: 'SolidifyDemo',
                 repo: 'madis-sandbox',
                 path: 'README.md'
