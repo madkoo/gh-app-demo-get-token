@@ -1,0 +1,43 @@
+name: Get Repository Content
+
+on:
+  workflow_dispatch:
+
+jobs:
+  get-content:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18' # Specify the Node.js version
+
+    - name: Get GitHub App Token
+      id: get_github_app_token
+      uses: peter-murray/workflow-application-token-action@v2
+      with:
+        application_id: ${{ secrets.GITHUB_APP_ID }}
+        application_private_key: ${{ secrets.GITHUB_APP_PRIVATE_KEY }}
+
+    - name: Run Script
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ steps.get_github_app_token.outputs.token }}
+        script: |
+            try {
+              const response = await octokit.rest.repos.getContent({
+                owner: 'SolidifyDemo',
+                repo: 'madis-sandbox',
+                path: 'README.md'
+              });
+
+              console.log(response.data);
+            } catch (error) {
+              console.error(`Error fetching repository content: ${error}`);
+            }
+          
+
+          
